@@ -7,7 +7,7 @@ package com.dayi.linkedlist;
  * @author yangshaoqiang <yangshq@pvc123.com>
  * @create 2020-12-31 9:53
  */
-public class Josepfu {
+public class JosepfuDemo {
     public static void main(String[] args) {
         // 测试一般
         CircleSingleLinkedList circleSingleLinkedList = new CircleSingleLinkedList();
