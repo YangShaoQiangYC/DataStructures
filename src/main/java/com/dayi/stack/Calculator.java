@@ -1,7 +1,7 @@
 package com.dayi.stack;
 
 /**
- * 计算器
+ * 计算器（中缀表达式计算器）
  * 说明：通过栈实现一个简单的加减乘除的计算器
  * @author yangshaoqiang <yangshq@pvc123.com>
  * @create 2021-01-07 16:53
