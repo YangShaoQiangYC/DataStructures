@@ -124,5 +124,4 @@ class ArrayStack {
             System.out.printf("stack[%d]=%d\n", i, stack[i]);
         }
     }
-
 }
