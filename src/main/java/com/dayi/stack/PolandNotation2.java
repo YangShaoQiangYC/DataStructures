@@ -3,6 +3,7 @@ package com.dayi.stack;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.regex.Pattern;
 
 /**
  * 逆波兰表达式计数器（后缀表达式计算器）
@@ -26,15 +27,24 @@ import java.util.Stack;
  * @create 2021-01-09 16:24
  */
 public class PolandNotation2 {
+
+    /**
+     * 匹配 + - * / ( ) 运算符
+     */
+    private static Pattern SYMBOL_PATTERN = Pattern.compile("\\+|-|\\*|/|\\(|\\)");
+
     public static void main(String[] args) {
-        String infixExpression = "1+((2+3)*4)-5";
+        String infixExpression = "1  +((2.5+   3) *   4) -5";
+        // 去除所有空格
+        infixExpression = replaceAllBlank(infixExpression);
+        System.out.println("去除空格后的中缀表达式：" + infixExpression);
         List<String> InfixExpressionList = toInfixExpressionList(infixExpression);
         System.out.println("中缀表达式list：" + InfixExpressionList);
         List<String> suffixExpressionList = parseSuffixExpression(InfixExpressionList);
         System.out.println("后缀表法式list：" + suffixExpressionList);
         // 中缀表达式转后缀表法式，并计算
-        int result = caculate(suffixExpressionList);
-        System.out.printf("%s=%d", infixExpression, result);
+        Double result = caculate(suffixExpressionList);
+        System.out.printf("%s=%f", infixExpression, result);
     }
 
     /**
@@ -49,7 +59,7 @@ public class PolandNotation2 {
         List<String> s2 = new ArrayList<>();
         // 编辑前缀表达式
         for (String item : infixExpression) {
-            if (item.matches("\\d+")) {
+            if (!isOper(item)) {
                 // 遇到操作数时，将其加入s2
                 s2.add(item);
             } else if (item.equals("(")) {
@@ -73,7 +83,6 @@ public class PolandNotation2 {
                     }
                     s1.push(item);
                 }
-
             }
         }
         // 将s1中剩余的运算符依次弹出并加入到s2中
@@ -98,14 +107,14 @@ public class PolandNotation2 {
         String keepNum = "";
         do {
             // 如果ch是一个字符，则直接加入到list
-            if ((ch=infixExpression.charAt(index)) < 48 || (ch=infixExpression.charAt(index)) > 57) {
+            if (isOper(String.valueOf(ch=infixExpression.charAt(index)))) {
                 list.add("" + ch);
                 index++;
             } else {
                 keepNum = "";
-                // 拼接多位数值
+                // 拼接多位数值，数字符号小数点的ASCII编码是46
                 while (index < infixExpression.length() && ((ch=infixExpression.charAt(index)) >= 48
-                        && (ch=infixExpression.charAt(index)) <= 57)) {
+                        && (ch=infixExpression.charAt(index)) <= 57 || ((ch=infixExpression.charAt(index)) == 46))) {
                     keepNum += ch;
                     index++;
                 }
@@ -125,19 +134,19 @@ public class PolandNotation2 {
      * @param list 存放逆波兰表达式数值和运算符的list
      * @return
      */
-    public static int caculate(List<String> list) {
+    public static Double caculate(List<String> list) {
         // 创建栈
         Stack<String> stack = new Stack<>();
         for (String item : list) {
             // 这里使用正则表达式来取出数
-            if (item.matches("\\d+")) {
+            if (!isOper(item)) {
                 // 当匹配到是单位或者是多位数值时，则直接入栈
                 stack.push(item);
             } else {
                 // 当是运算符时，则pop出两个数进行运算，并将运算结果存入栈中
-                int num1 = Integer.parseInt(stack.pop());
-                int num2 = Integer.parseInt(stack.pop());
-                int result = 0;
+                Double num1 = Double.parseDouble(stack.pop());
+                Double num2 = Double.parseDouble(stack.pop());
+                Double result = 0.00;
                 if (item.equals("+")) {
                     result = num1 + num2;
                 } else if (item.equals("-")) {
@@ -152,7 +161,25 @@ public class PolandNotation2 {
                 stack.push("" + result);
             }
         }
-        return Integer.parseInt(stack.pop());
+        return Double.parseDouble(stack.pop());
+    }
+
+    /**
+     * 取出所有空白符
+     * @param infixExpression
+     */
+    public static String replaceAllBlank(String infixExpression) {
+        // \\s+ 匹配任何空白字符，包括空格、制表符、换页符等等, 等价于[ \f\n\r\t\v]
+        return infixExpression.replaceAll("\\s+","");
+    }
+
+    /**
+     * 判断是不是一个运算符
+     * @param value
+     * @return
+     */
+    public static boolean isOper(String value) {
+        return SYMBOL_PATTERN.matcher(value).matches();
     }
 
 }
