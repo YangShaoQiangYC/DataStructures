@@ -26,9 +26,8 @@ public class BubbleSort {
         bubbleSort(arr);
         long endTime = System.currentTimeMillis();
 
-        System.out.println("冒泡排序执行消耗时间：" + (endTime - startTime)/1000 + "秒");
-
         // 输出结果
+        System.out.println("冒泡排序执行消耗时间：" + (endTime - startTime)/1000 + "秒");
         System.out.println("排序后：" + Arrays.toString(arr));
     }
 
