@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 /**
  * 冒泡排序
+ * 排序思想：通过对待排序序列从前向后（从下标较小的元素开始），依次比较相邻元素的值，若发现逆序则交换，
+ * 使较大的元素逐渐从前移向后部，就像水底的气泡一样逐渐向上冒
  * @author yangshaoqiang <yangshq@pvc123.com>
  * @create 2021-01-13 10:39
  */
