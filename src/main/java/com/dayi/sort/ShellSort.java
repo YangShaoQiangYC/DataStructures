@@ -1,10 +1,9 @@
 package com.dayi.sort;
 
-import java.util.Arrays;
-
 /**
- * 希尔排序（交换法，效率较慢）
+ * 希尔排序
  *  1.说明：希尔排序，也是一种插入排序，是对简单插入排序进行优化的一个更高效的版本，也称为【缩小增量排序】
+ *    简单插入排序的弊端是：当需要插入的数是较小的数时，元素后移的次数明显增多，对效率有影响
  *  2.排序思想：希尔排序是把记录按下标的一定增量分组，对每组使用直接插入排序算法排序;随着增量逐渐减少，每组包含
  * 的关键词越来越多，当增量减至1时，整个文件恰被分成一组，算法便终止。
  *  3.举例解释排序思想：假如有10个数需要排序
@@ -28,28 +27,26 @@ public class ShellSort {
 
         long startTime = System.currentTimeMillis();
         // 冒泡排序
-        shellSort(arr);
+        shellSort2(arr);
         long endTime = System.currentTimeMillis();
 
         // 输出结果
-        System.out.println("希尔排序执行消耗时间：" + (endTime - startTime)/1000 + "秒");
-        System.out.println("排序后：" + Arrays.toString(arr));
+        System.out.println("希尔排序执行消耗时间：" + (endTime - startTime) + "毫秒");
+        //System.out.println("排序后：" + Arrays.toString(arr));
     }
 
     /**
-     * 希尔排序
-     * 每一次分组，依次缩短2倍的步长
-     * 步长越小，则相当于有越多的数据元素为一组，同组间的元素从头到尾进行交换排序
-     * 直到步长为1
+     * 希尔排序（交换法，效率较慢）
+     * 每一次分组，依次缩短2倍的步长，步长越小，则相当于有越多的数据元素为一组
+     * 同组间的元素从头到尾进行交换排序，直到步长为1，再排序即可完成
      * @param arr
      */
     public static void shellSort(int[] arr) {
         int temp = 0;
-        // 逐次分组
+        // 逐次分组，每次分组逐步缩小增量（每组元素逐步增加）
         for (int gap = arr.length/2; gap > 0; gap /= 2) {
             for (int i = gap; i < arr.length; i++) {
-                // 查找该元素在本组中的下一个元素，进行比较，符合条件则交换
-                // (注意，会回溯比较之前已经比较的元素，依据步长回溯)
+                // 与该元素在本组中一个步长的相邻元素进行比较，符合条件则交换
                 for (int j = i - gap; j >= 0 ; j -= gap) {
                     if (arr[j] > arr[j+gap]) {
                         temp = arr[j];
@@ -57,6 +54,34 @@ public class ShellSort {
                         arr[j+gap] = temp;
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * 希尔排序（移位法）
+     * 每一次分组，依次缩短2倍的步长，步长越小，则相当于有越多的数据元素为一组
+     * 同组间的元素从头到尾进行交换排序，直到步长为1，再排序即可完成
+     * @param arr
+     */
+    public static void shellSort2(int[] arr) {
+        int insertVal;
+        int insertIndex;
+        // 逐次分组，每次分组逐步缩小增量（每组元素逐步增加）
+        for (int gap = arr.length/2; gap > 0; gap /= 2) {
+            // 从第gap元素开始，逐个对其所在的组进行直接插入排序（下面的循环其实就使用到插入排序算法）
+            for (int i = gap; i < arr.length; i++) {
+                insertVal = arr[i];
+                insertIndex = i;
+                // 前面没有元素了，或者当前值比前面有序表最后一个元素值还大，则不会进入循环（因为前面已按从小到大排好序）
+                while (insertIndex-gap >= 0 && arr[insertIndex-gap] > insertVal) {
+                    // 前面的元素的值后移，为插入的位置腾出空间
+                    arr[insertIndex] = arr[insertIndex-gap];
+                    // insertIndex往前移动
+                    insertIndex -= gap;
+                }
+                // 找到插入位置了
+                arr[insertIndex] = insertVal;
             }
         }
     }

@@ -36,16 +36,16 @@ public class InsertSort {
         // 从第2个开始遍历，即默认有序表最初始为第1个元素（数组从0开始，第一元素的下标为0）
         for (int i = 1; i < arr.length; i++) {
             insertVal = arr[i];
-            // 当前无序表的前一个元素，即当前元素前有序表的最后一个元素的位置
-            insertIndex = i - 1;
+            insertIndex = i;
             // 前面没有元素了，或者当前值比前面有序表最后一个元素值还大，则不会进入循环（因为前面已按从小到大排好序）
-            while (insertIndex >= 0 && arr[insertIndex] > insertVal) {
+            while (insertIndex-1 >= 0 && arr[insertIndex-1] > insertVal) {
                 // 前面的元素的值后移，为插入的位置腾出空间
-                arr[insertIndex+1] = arr[insertIndex];
+                arr[insertIndex] = arr[insertIndex-1];
+                // insertIndex往前移动
                 insertIndex -= 1;
             }
             // 找到插入位置了
-            arr[insertIndex+1] = insertVal;
+            arr[insertIndex] = insertVal;
         }
     }
 }
