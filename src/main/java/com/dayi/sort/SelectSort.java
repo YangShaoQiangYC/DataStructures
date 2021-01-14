@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 /**
  * 选择排序
- * 排序思想：有n个数，第一次从arr[0]-arr[n-1]中选取最小值，与arr[0]交换；
+ *  1.排序思想：有n个数，第一次从arr[0]-arr[n-1]中选取最小值，与arr[0]交换；
  * 第二次从arr[1]-arr[n-1]中选取最小值，与arr[1]交换
  * 第三次从arr[2]-arr[n-1]中选取最小值，与arr[2]交换
  * ...
@@ -18,6 +18,7 @@ import java.util.Arrays;
 public class SelectSort {
     public static void main(String[] args) {
         // int[] arr = {3, 9, -1, 10, -2};
+
         int[] arr = new int[80000];
         for (int i = 0; i < arr.length; i++) {
             // 生成一个[0, 8000000)的数
@@ -39,12 +40,14 @@ public class SelectSort {
      * @param arr
      */
     public static void selectSort(int[] arr) {
+        int temp;
+        int index;
         // 当已确认前n-1个最小值之后，无需再确认比较最后一个数值，即前n-1个最小，则n就是最大的了
         // 故比较前n-1个即可
         for (int i = 0; i < arr.length - 1; i++) {
             // 假定当前为最小值
-            int temp = arr[i];
-            int index = i;
+            temp = arr[i];
+            index = i;
             // 从i + 1开始找出比arr[i]小的最小值，与arr[i]进行交换
             for (int j = i + 1; j < arr.length ; j++) {
                 if (temp > arr[j]) {
