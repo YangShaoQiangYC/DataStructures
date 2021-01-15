@@ -11,7 +11,9 @@ import java.util.Arrays;
  */
 public class QuickSort {
     public static void main(String[] args) {
-        // int[] arr = {-9, 78, 0, 23, -567, 70};
+        /*int[] arr = {-9, 78, 0, 23, -567, 70};
+        quickSort(arr, 0, arr.length-1);
+        System.out.println(Arrays.toString(arr));*/
 
         int[] arr = new int[8000000];
         for (int i = 0; i < arr.length; i++) {
@@ -38,44 +40,46 @@ public class QuickSort {
     public static void quickSort(int[] arr, int left, int right) {
         int l = left;
         int r = right;
-        // 中轴值
         int pivot = arr[(left + right) / 2];
         while (l < r) {
-            // 在pivot的左边一直找，找到大于等于pivot的值才推出
+            // 在pivot的左边一直找，找到大于等于pivot的值才退出（如果找不到，l指针最终会停在中轴值上面）
             while (arr[l] < pivot) {
-                l += 1;
+                l++;
             }
-            // 在pivot的右边一直找，找到大于等于pivot的值才推出
+            // 在pivot的右边一直找，找到小于等于pivot的值才退出（如果找不到，r指针最终会停在中轴值上面）
             while (arr[r] > pivot) {
-                r -= 1;
+                r--;
             }
-            // 左边找不到比中轴值大，右边也找不到比中轴值小，则推出循环
+            // 左边找不到比中间值大，右边也找不到比中间值小，则退出循环
             if (l >= r) {
                 break;
             }
-            // 交换
-            int temp = arr[l];
-            arr[l] = arr[r];
-            arr[r] = temp;
-            // 如果交换完后，发现arr[l] == pivot，r--
-            if (arr[l] == pivot) {
-                r -= 1;
-            }
-            // 如果交换后，发现arr[r] == pivot，l--
+            // 交换值
+            int temp = arr[r];
+            arr[r] = arr[l];
+            arr[l] = temp;
+            // 左边找不到比中间值大的，arr[l]等于中轴值，交换后，arr[r]等于中轴值，
+            // 故交换后，arr[l]的小于等于中轴值，而arr[r]等于中轴值，l指针需要右移
             if (arr[r] == pivot) {
-                l += 1;
+                l++;
+            }
+            // 右边找不到比中间值小的，arr[r]等于中轴值，交换后，arr[l]等于中轴值，
+            // 故交换后，arr[r]大于等于中轴值，而arr[l]等于中轴值，r指针需要左移
+            if (arr[l] == pivot) {
+                r--;
             }
         }
+        // 继续递归排序
         if (l == r) {
-            l += 1;
-            r -= 1;
+            l++;
+            r--;
         }
         // 左递归
-        if (left < r) {
+        if (r > left) {
             quickSort(arr, left, r);
         }
         // 右递归
-        if (l > right) {
+        if (l < right) {
             quickSort(arr, l, right);
         }
     }
