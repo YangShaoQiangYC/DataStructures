@@ -20,6 +20,7 @@ import java.util.Arrays;
  *  3)基数排序时稳定的。【注：假定在待排序的记录序列中，存在多个具有相同的关键字的记录，若经过排序后，
  *  这些记录的相对次序保持不变，即在原序列中，r[i]=r[j]，若r[i]在r[j]之前，而在排序后的序列中，r[i]仍在
  *  r[j]之前，则称这种排序算法是稳定的，否则称为不稳定的】
+ *  4）对于负数的支持，请参考https://code.i-harness.com/zh-CN/q/e98fa9
  * @author yangshaoqiang <yangshq@pvc123.com>
  * @create 2021-01-18 11:30
  */
