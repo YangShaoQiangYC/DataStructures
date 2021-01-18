@@ -26,7 +26,7 @@ public class ShellSort {
         }
 
         long startTime = System.currentTimeMillis();
-        // 冒泡排序
+        // 希尔排序
         shellSort2(arr);
         long endTime = System.currentTimeMillis();
 
