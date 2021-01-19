@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 二分查找
+ * 二分查找（也叫做 折半查找）
  * 注意：使用二分查找的前提是该数组是有序的
  * @author yangshaoqiang <yangshq@pvc123.com>
  * @create 2021-01-19 11:26
@@ -36,10 +36,10 @@ public class BinarySearch {
 
         int mid = (left + right) / 2;
         int minVal = arr[mid];
-        if (minVal > findVal) {
+        if (findVal < minVal) {
             // 比中间值小，左递归
             return binarySearch(arr, left, mid - 1, findVal);
-        } else if (minVal < findVal) {
+        } else if (findVal > minVal) {
             // 比中间值大，右递归
             return binarySearch(arr, mid + 1, right, findVal);
         } else {
