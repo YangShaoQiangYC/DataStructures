@@ -21,21 +21,27 @@ public class BinaryTreeDemo {
         node3.setLeft(node5);
         node3.setRight(node4);
         binaryTree.setRoot(root);
-        // 测试前序，中序和后序
+        /*// 1.测试前序，中序和后序
         System.out.println("前序遍历");
         binaryTree.preOrder();
         System.out.println("中序遍历");
         binaryTree.infixOrder();
         System.out.println("后序遍历");
-        binaryTree.postOrder();
-        // 前序遍历查找节点测试
+        binaryTree.postOrder();*/
+        /*// 2.前序遍历查找节点测试
         System.out.println("前序遍历查找");
         HeroNode heroNode = binaryTree.preOrderSearch(6);
         if (null != heroNode) {
             System.out.println(heroNode);
         } else {
             System.out.println("找不到该节点");
-        }
+        }*/
+        // 3.删除节点测试
+        System.out.println("删除节点前，前序遍历");
+        binaryTree.preOrder();
+        binaryTree.delNode(3);
+        System.out.println("删除节点后，前序遍历");
+        binaryTree.preOrder();
     }
 }
 
@@ -117,6 +123,22 @@ class BinaryTree {
             return this.root.postOrderSearch(id);
         }
         return null;
+    }
+
+    /**
+     * 删除节点
+     * @param id
+     */
+    public void delNode(Integer id) {
+        if (this.root != null) {
+            if (id.equals(this.root.getId())) {
+                this.root = null;
+                return;
+            }
+            this.root.delNode(id);
+        } else {
+            System.out.println("树为空，不能删除");
+        }
     }
 
 }
@@ -227,6 +249,7 @@ class HeroNode {
      */
     public HeroNode preOrderSearch(Integer id) {
         // 判断当前节点是不是要查找的节点
+        //（真正的比较在这里，其他的只是比较左右子树是否为空）
         if (this.id.equals(id)) {
             return this;
         }
@@ -270,6 +293,7 @@ class HeroNode {
 
         // 左递归没有找到节点，继续判断当前节点是否为要查找的节点
         // 如果是，则直接返回
+        //（真正的比较在这里，其他的只是比较左右子树是否为空）
         if (this.id.equals(id)) {
             return this;
         }
@@ -310,12 +334,47 @@ class HeroNode {
         }
 
         // 如果左右子树均没有找到，则判断当前节点是不是该节点，不是则返回null
+        //（真正的比较在这里，其他的只是比较左右子树是否为空）
         if (this.id.equals(id)) {
             return this;
         }
 
         // 找不到节点，直接返回null
         return null;
+    }
+
+    /**
+     * 删除节点
+     * 说明：
+     *  1）如果删除的节点是叶子节点，则删除该节点
+     *  2）如果删除的节点是非叶子节点，则删除该子树
+     * 思路：
+     *  1）因为我们的二叉树是单向的，所以我们是判断当前节点的子节点是否是需要删除节点，而不能去判断当前这个节点是不是需要删除的节点
+     *  2）如果当前节点的左子节点不为空，并且左子节点就是要删除的节点，就将this.left = null;并且返回（结束递归删除）
+     *  3）如果当前节点的右子节点不为空，并且右子节点就是要删除的节点，就将this.right = null;并且返回（结束递归）
+     *  4）如果第2和第3步没有删除节点，那么我们就需要向左子树递归删除
+     *  5）如果第4步也没有删除节点，则应当向右子树进行递归删除
+     * @param id
+     */
+    public void delNode(Integer id) {
+        // 如果当前节点的左子节点不为空，并且左子节点就是要删除的节点，就将this.left = null;并且返回
+        if (this.left != null && id.equals(this.left.id)) {
+            this.left = null;
+            return;
+        }
+        // 如果当前节点的右子节点不为空，并且右子节点就是要删除的节点，就将this.right = null;并且返回
+        if (this.right != null && id.equals(this.right.id)) {
+            this.right = null;
+            return;
+        }
+        // 向左子树递归删除
+        if (this.left != null) {
+            this.left.delNode(id);
+        }
+        // 向右子树递归删除
+        if (this.right != null) {
+            this.right.delNode(id);
+        }
     }
 
 }
