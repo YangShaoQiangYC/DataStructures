@@ -22,13 +22,18 @@ public class ThreadedBinaryTreeDemo {
         node3.setLeft(node6);
         ThreadedBinaryTree threadedBinaryTree = new ThreadedBinaryTree();
         threadedBinaryTree.setRoot(root);
-        // 中序线索化
+        // 中序遍历
+        System.out.println("中序遍历二叉树");
+        threadedBinaryTree.infixOrder();
+        // 中序线索化，测试中序线索化，
         threadedBinaryTree.threadedNodes();
-        // 测试中序线索化，
         Node leftNode = node5.getLeft();
         Node rightNode = node5.getRight();
         System.out.println("10号节点的前驱节点是：" + leftNode);
         System.out.println("10号节点的后继节点是：" + rightNode);
+        // 遍历中序线索化二叉树
+        System.out.println("遍历中序线索化二叉树");
+        threadedBinaryTree.threadedList();
     }
 }
 
@@ -47,6 +52,29 @@ class ThreadedBinaryTree {
 
     public void setRoot(Node root) {
         this.root = root;
+    }
+
+    /**
+     * 遍历中序线索二叉树
+     */
+    public void threadedList() {
+        // 定义一个变量，存储当前遍历的节点，从root开始
+        Node node = root;
+        while (node != null) {
+            // 循环找到有左线索化的节点，第一个找到的就是最开始的节点
+            while (node.getLeftType() == 0) {
+                node = node.getLeft();
+            }
+            // 打印当前节点
+            System.out.println(node);
+            // 如果当前节点的右指针指向后继节点，则一直打印输出
+            while (node.getRightType() == 1) {
+                node = node.getRight();
+                System.out.println(node);
+            }
+            // 如果当前节点的右指针没有指向后继节点，就从下一个节点从新开始
+            node = node.getRight();
+        }
     }
 
     /**
@@ -188,9 +216,9 @@ class Node {
     private Node right;
 
     /** 左指针类型，0：指向左子树；1：指向前驱节点 */
-    private Integer leftType;
+    private int leftType;
     /** 右指针类型，0：指向右子树；1：指向后继节点 */
-    private Integer rightType;
+    private int rightType;
 
     public Node(Integer id, String name) {
         this.id = id;
@@ -253,6 +281,8 @@ class Node {
                 '}';
     }
 
+    /** -----------------------前中后序遍历---------------------------------*/
+
     /**
      * 前序遍历
      */
@@ -293,6 +323,10 @@ class Node {
         }
         System.out.println(this);
     }
+
+    /** -----------------------前中后序遍历---------------------------------*/
+
+    /** -----------------------前中后序遍历查找---------------------------------*/
 
     /**
      * 前序遍历查找
@@ -394,6 +428,8 @@ class Node {
         // 找不到节点，直接返回null
         return null;
     }
+
+    /** -----------------------前中后序遍历查找---------------------------------*/
 
     /**
      * 删除节点
