@@ -1,5 +1,6 @@
 package com.dayi.huffmancode;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -14,22 +15,26 @@ import java.util.*;
  *  2) 负数：
  *    反码：符号位不变，其他位数取反
  *    补码：反码 + 1
- *  举例：-88‘
+ *  举例：-88
  *   原码：11011000
  *   反码：10100111
  *   补码：10101000
+ *  2.注意事项
+ *   1）如果文件本身就是经过压缩处理的，那么使用哈夫曼编码再压缩，则压缩效率不会有明显变化，比如视频，ppt文件等
+ *   2）哈夫曼编码是按字节来处理的，因此可以处理所有的文件（二进制文件、文本文件等等）
+ *   3）如果一个文件中的内容，重复的数据不多，压缩效果也不会很明显
  * @author yangshaoqiang <yangshq@pvc123.com>
  * @create 2021-02-01 17:06
  */
 public class HuffmanCode {
     public static void main(String[] args) {
-        String content = "i like like like java do you like a java";
+        /*String content = "i like like like java do you like a java";
         byte[] contentBytes = content.getBytes();
         System.out.println("原始数据对应的字节数组：" + Arrays.toString(contentBytes));
         byte[] zipBytes = huffmanZip(contentBytes);
         System.out.println("压缩后的字节数组：" + Arrays.toString(zipBytes));
-        byte[] sourceBytes = unZip(zipBytes, huffmanCodes);
-        System.out.println("解压后的字符串：" + new String(sourceBytes));
+        byte[] sourceBytes = huffmanUnZip(zipBytes);
+        System.out.println("解压后的字符串：" + new String(sourceBytes));*/
 
         // 分步过程
         /*// 组装节点
@@ -47,11 +52,92 @@ public class HuffmanCode {
         System.out.println("压缩后的字节数组为：");
         byte[] zipBytes = zip(contentBytes, huffmanCodes);
         System.out.println(Arrays.toString(zipBytes));*/
+
+       /* // 压缩文件
+        zipFile("d://src.jpg", "d://dst.zip");
+        System.out.println("压缩文件完成~~~");*/
+        // 解压文件
+        unZipFile("d://dst.zip", "d://src2.jpg");
+        System.out.println("解压文件完成~~~");
+
+    }
+
+    /**
+     * 解压文件
+     * @param zipFile 被解压的文件的全路径
+     * @param unZipFile 解压后文件的存放路径
+     */
+    private static void unZipFile(String zipFile, String unZipFile) {
+        // 创建输入流，及对象输入流
+        FileInputStream is = null;
+        ObjectInputStream ois = null;
+        // 创建输出流
+        FileOutputStream os = null;
+        try {
+            // 读取压缩后的文件内容和哈夫曼编码表
+            is = new FileInputStream(zipFile);
+            ois = new ObjectInputStream(is);
+            byte[] huffmanBytes = (byte[]) ois.readObject();
+            Map<Byte, String> huffmanCodes = (Map<Byte, String>) ois.readObject();
+            // 对文件进行解压
+            byte[] sourceBytes = unZip(huffmanBytes, huffmanCodes);
+            // 输出解压后的内容到指定路径下
+            os = new FileOutputStream(unZipFile);
+            os.write(sourceBytes);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                os.close();
+                ois.close();
+                is.close();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * 文件压缩
+     * @param srcFile 被压缩文件的全路径
+     * @param desFile 压缩后文件的存放路径
+     */
+    private static void zipFile(String srcFile, String desFile) {
+        // 创建输入流
+        FileInputStream is = null;
+        // 创建输出流，及对象输出流
+        FileOutputStream os = null;
+        ObjectOutputStream oos = null;
+        try {
+            // 读取文件内容
+            is = new FileInputStream(srcFile);
+            byte[] sourceBytes = new byte[is.available()];
+            is.read(sourceBytes);
+            // 对内容进行压缩
+            byte[] huffmanBytes = huffmanZip(sourceBytes);
+            // 输出压缩后的内容到指定路径下
+            os = new FileOutputStream(desFile);
+            oos = new ObjectOutputStream(os);
+            oos.writeObject(huffmanBytes);
+            // 把哈夫曼编码也写入到指定的路径下，注意，一定要把哈夫曼编码表写入到压缩文件中，
+            // 哈夫曼编码表是为了恢复数据，解压缩的时候使用
+            oos.writeObject(huffmanCodes);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                oos.close();
+                os.close();
+                is.close();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     /**
      * 封装哈夫曼编码压缩方法
-     * @param bytes 原始字符串数据对应的byte数组
+     * @param bytes 原始字符串数据对应的byte数组原始字符串数据对应的byte数组
      * @return 哈夫曼编码后的字节数组（压缩后的数组）
      */
     private static byte[] huffmanZip(byte[] bytes) {
@@ -64,6 +150,16 @@ public class HuffmanCode {
         // 4.根据哈夫曼编码表，对原始字符串数据对应的byte数组进行压缩，得到压缩后的哈夫曼编码字节数组
         byte[] zipBytes = zip(bytes, huffmanCodes);
         return zipBytes;
+    }
+
+    /**
+     * 封装哈夫曼编码解压方法
+     * @param bytes 哈夫曼编码后的字节数组（压缩后的数组）
+     * @return 原始字符串数据对应的byte数组
+     */
+    private static byte[] huffmanUnZip(byte[] bytes) {
+        byte[] sourceBytes = unZip(bytes, huffmanCodes);
+        return sourceBytes;
     }
 
     /**
@@ -176,7 +272,7 @@ public class HuffmanCode {
             stringBuilder.append(huffmanCodes.get(b));
         }
         // 将哈夫曼编码后的字符串:101010001011111111001000...，转换为byte数组
-        System.out.println("哈夫曼编码为：" + stringBuilder.toString());
+        // System.out.println("哈夫曼编码为：" + stringBuilder.toString());
         int len;
         if ((stringBuilder.length() % 8) == 0) {
             len = stringBuilder.length() / 8;

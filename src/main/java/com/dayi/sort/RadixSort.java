@@ -60,7 +60,7 @@ public class RadixSort {
         // 得到最大数是几位数
         int maxLength = (max + "").length();
         for (int i = 0, n = 1; i < maxLength; i++, n *= 10) {
-            // 每一轮针对每个元素对应的位数进行排序，第一次是个位，第二次是十为，第三次是百位，以此类推
+            // 每一轮针对每个元素对应的位数进行排序，第一次是个位，第二次是十位，第三次是百位，以此类推
             for (int j = 0; j < arr.length; j++) {
                 // 取出每个元素对应位的值，得出元素将存放在那个“桶”
                 int digitOfElement = arr[j] / n % 10;

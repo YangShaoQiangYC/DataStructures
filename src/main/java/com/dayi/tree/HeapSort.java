@@ -35,12 +35,12 @@ public class HeapSort {
      */
     public static void heapSort(int[] arr) {
         System.out.println("堆排序");
-        // 将无须序列构建成一个大顶堆，堆顶元素为最大节点值
+        // 将无序序列构建成一个大顶堆，堆顶元素为最大节点值
         for (int i = arr.length/2-1; i >= 0; i--) {
             adjustHeap(arr, i, arr.length);
         }
         // 每次将堆顶元素与数组的最后一个元素进行替换，再对剩余元素进行大顶堆调整
-        // 没调整一次，替换一下，直到整个数组调整替换完毕
+        // 每调整一次，替换一下，直到整个数组调整替换完毕
         int temp = 0;
         for (int j = arr.length - 1; j >= 0; j--) {
             // 将堆顶元素的值与当前数组比较的最后一个元素对调
