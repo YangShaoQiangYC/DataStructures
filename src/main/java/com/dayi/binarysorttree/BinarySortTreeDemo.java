@@ -62,9 +62,21 @@ public class BinarySortTreeDemo {
         System.out.println("删除只有一颗子树的节点后，中序遍历二叉树");
         binarySortTree.infixOrder();*/
 
-        // 删除有两颗子树的节点
-        binarySortTree.delNode(7);
+        /*// 删除有两颗子树的节点
+        binarySortTree.delNode(10);
         System.out.println("删除有两颗子树的节点后，中序遍历二叉树");
+        binarySortTree.infixOrder();*/
+
+        // 删除所有节点测试
+        binarySortTree.delNode(2);
+        binarySortTree.delNode(5);
+        binarySortTree.delNode(9);
+        binarySortTree.delNode(12);
+        binarySortTree.delNode(7);
+        binarySortTree.delNode(3);
+        binarySortTree.delNode(10);
+        binarySortTree.delNode(1);
+        System.out.println("删除所有节点后，中序遍历二叉树");
         binarySortTree.infixOrder();
     }
 }
@@ -135,6 +147,7 @@ class BinarySortTree {
         while (tempNode.left != null) {
             tempNode = node.left;
         }
+        // 1.删除节点，与删除叶子节点的思路一致
         // 找到要删除节点的父节点
         Node parent = searchParent(tempNode.value);
         // 要删除的targetNode节点是父节点的左子节点，还是右子节点
@@ -145,7 +158,33 @@ class BinarySortTree {
             // 是右子节点
             parent.right = null;
         }
+        // 2.返回该最小节点的值
         return tempNode.value;
+    }
+
+    /**
+     * 返回以node为根节点的二叉排序树中的最大节点的值
+     * 1.删除以node为根节点的二叉排序树中的最大节点（肯定是叶子节点）
+     * 2.返回该最大节点的值
+     * @param node 传入的node（当做二叉排序的根节点来查找）
+     * @return
+     */
+    public int delLeftTreeMax(Node node) {
+        Node tempNode = node;
+        while (tempNode.right != null) {
+            tempNode = node.right;
+        }
+        // 找到要删除节点的父节点
+        Node parent = searchParent(tempNode.value);
+        // 要删除的targetNode节点是父节点的右子节点，因为只有一直往右边找，才能找到左子树中最大的值
+       if (parent.left != null && parent.left.value == tempNode.value) {
+            // 是左子节点
+            parent.left = null;
+       } else if (parent.right != null && parent.right.value == tempNode.value) {
+           // 是右子节点
+           parent.right = null;
+       }
+       return tempNode.value;
     }
 
     /**
@@ -183,26 +222,38 @@ class BinarySortTree {
                 parent.right = null;
             }
         } else if (targetNode.left != null && targetNode.right != null) {
-            // 情况二：删除有两颗子树的节点（包含要删除根节点）
+            // 情况二：删除有两颗子树的节点（包含要删除根节点），有两种实现方式
+            /*// 方式一，是找targetNode的右子树中最小的节点，删除该最小节点，并把其值替换上来
             int minVal = delRightTreeMin(targetNode.right);
-            targetNode.value = minVal;
+            targetNode.value = minVal;*/
+            // 方式二，是找targetNode的左子树中的最大的节点，删除该最大节点，并把其值替换上来
+            int maxVal = delLeftTreeMax(targetNode.left);
+            targetNode.value = maxVal;
         } else {
-            // 情况三：删除只有一颗子树的节点
+            // 情况三：删除只有一颗子树的节点(在删除只有一颗子树的时候，需要考虑父节点是否为空的情况)
             if (targetNode.left != null) {
-                // 如果targetNode有左子节点，且targetNode是parent的左子节点
-                if (parent.left.value == targetNode.value) {
-                    parent.left = targetNode.left;
+                if (parent != null) {
+                    // 如果targetNode有左子节点，且targetNode是parent的左子节点
+                    if (parent.left.value == targetNode.value) {
+                        parent.left = targetNode.left;
+                    } else {
+                        // 如果targetNode有左子节点，且targetNode是parent的右子节点
+                        parent.right = targetNode.left;
+                    }
                 } else {
-                    // 如果targetNode有左子节点，且targetNode是parent的右子节点
-                    parent.right = targetNode.left;
+                    root = targetNode.left;
                 }
             } else {
-                // 如果targetNode有右子节点，且targetNode是parent的左子节点
-                if (parent.left.value == targetNode.value) {
-                    parent.left = targetNode.right;
+                if (parent != null) {
+                    // 如果targetNode有右子节点，且targetNode是parent的左子节点
+                    if (parent.left.value == targetNode.value) {
+                        parent.left = targetNode.right;
+                    } else {
+                        // 如果targetNode有右子节点，且targetNode是parent的右子节点
+                        parent.right = targetNode.right;
+                    }
                 } else {
-                    // 如果targetNode有右子节点，且targetNode是parent的右子节点
-                    parent.right = targetNode.right;
+                    root = targetNode.right;
                 }
             }
         }
