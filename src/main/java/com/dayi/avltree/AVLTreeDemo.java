@@ -287,12 +287,12 @@ class Node {
      * 右旋转（左子树的高度高，需要右旋减低左子树的高度）
      * 左子树的高度 - 右子树的高度 > 1
      */
-    public void RightRotate() {
+    public void rightRotate() {
         // 1.以当前节点为根节点的值，创建新的节点
         Node newNode = new Node(this.value);
         // 2.当前节点的右子树，作为新节点的右子树
         newNode.right = this.right;
-        // 3.当前节点的左子树的右节点，作为新节点的左子树
+        // 3.当前节点的左子树的右节点，作为新节点的左节点
         newNode.left = this.left.right;
         // 4.当前节点的左节点的值，作为当前节点的值
         this.value = this.left.value;
@@ -333,12 +333,34 @@ class Node {
 
         // 当添加完节点后，如果（右子树的高度 - 左子树的高度）> 1时，则左旋转
         if (rightHeight() - leftHeight() > 1) {
-            leftRotate();
+            // 如果它（它指根节点）的右子树的左子树的高度，大于它的右子树的右子树的高度，则它的右子树要先右旋
+            if (this.right != null && this.right.leftHeight() > this.right.rightHeight()) {
+                // 先对当前节点的右子树进行右旋转
+                this.right.rightRotate();
+                // 再对当前节点进行左旋转
+                this.leftRotate();
+            } else {
+                // 直接进行左旋转
+                leftRotate();
+            }
+            // 已经新型左旋转了，则直接返回，不用再进行下面的旋转判断
+            // 因为加一个节点判断一次，再进行旋转之后已经平衡了，还进行下面的旋转，则没有意义
+            // 因此，如果已经经过上面的旋转，则无需进行下面的旋转，直接返回
+            return;
         }
 
         // 当添加完节点后，如果（左子树的高度 - 右子树的高度）> 1时，则右旋转
         if (leftHeight() - rightHeight() > 1) {
-            RightRotate();
+            // 如果它的左子树的右子树的高度，大于他左子树的左子树的高度，则它的左子树要先左旋
+            if (this.left != null && this.left.rightHeight() > this.left.leftHeight()) {
+                // 先对当前节点的左子树进行左旋转
+                this.left.leftRotate();
+                // 再对当前节点进行右旋转
+                rightRotate();
+            } else {
+                // 直接进行右旋转
+                rightRotate();
+            }
         }
     }
 
