@@ -176,7 +176,7 @@ class BinarySortTree {
         }
         // 找到要删除节点的父节点
         Node parent = searchParent(tempNode.value);
-        // 要删除的targetNode节点是父节点的右子节点，因为只有一直往右边找，才能找到左子树中最大的值
+        // 要删除的targetNode节点是父节点的左子节点，还是右子节点
         if (parent.left != null && parent.left.value == tempNode.value) {
             // 是左子节点
             parent.left = null;
