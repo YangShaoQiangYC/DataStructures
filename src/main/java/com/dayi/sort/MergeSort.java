@@ -3,7 +3,7 @@ package com.dayi.sort;
 import java.util.Arrays;
 
 /**
- * 归并排序
+ * 6.归并排序
  *  排序思想：归并排序是利用归并的思想思想的排序方法，该方法采用经典的分治策略（分治法将问题【分】成一些小的问题，
  *  然后递归求解；而【治】的阶段则将分的阶段得到的各答案“修补”在一起，即分而治之）
  * @author yangshaoqiang <yangshq@pvc123.com>

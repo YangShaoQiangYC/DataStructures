@@ -3,7 +3,7 @@ package com.dayi.tree;
 import java.util.Arrays;
 
 /**
- * 堆排序
+ * 8.堆排序
  * 1.基本思想
  *  1）将待排序序列构造成一个大顶堆
  *  2）此时，整个序列的最大值就是堆顶的根节点
