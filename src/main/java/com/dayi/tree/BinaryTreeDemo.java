@@ -21,6 +21,7 @@ public class BinaryTreeDemo {
         node3.setLeft(node5);
         node3.setRight(node4);
         binaryTree.setRoot(root);
+
         /*// 1.测试前序，中序和后序
         System.out.println("前序遍历");
         binaryTree.preOrder();
